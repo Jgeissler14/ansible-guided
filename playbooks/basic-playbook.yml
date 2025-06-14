@@ -1,0 +1,13 @@
+---
+- name: Basic example playbook
+  hosts: localhost
+  gather_facts: false
+
+  vars:
+    message: "Hello from Ansible!"
+
+  tasks:
+    - name: Create a sample file
+      copy:
+        content: "{{ message }}"
+        dest: "hello.txt"

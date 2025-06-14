@@ -1,0 +1,28 @@
+---
+- name: Launch an EC2 instance
+  hosts: localhost
+  gather_facts: false
+
+  vars:
+    instance_name: myExample
+    region: us-east-1
+    key_name: mykey
+    image_id: ami-1234567890abcdef0
+
+  tasks:
+    - name: Launch instance
+      amazon.aws.ec2_instance:
+        name: "{{ instance_name }}"
+        key_name: "{{ key_name }}"
+        instance_type: t2.micro
+        image_id: "{{ image_id }}"
+        region: "{{ region }}"
+        wait: true
+      register: ec2
+
+    - name: Wait for SSH to become available
+      ansible.builtin.wait_for:
+        host: "{{ ec2.instances[0].public_ip_address }}"
+        port: 22
+        timeout: 300
+
